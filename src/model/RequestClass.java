@@ -1,43 +1,48 @@
 package model;
 
+import java.io.IOException;
 import org.apache.http.client.fluent.Request;
+import org.json.JSONException;
 import org.json.JSONObject;
 
+
+/**
+ * A classe RequestClass implementa os métodos de requisição https.
+ *
+ * Toda classe filha da RequestClass pode usar os métodos get e parse
+ * para coletar dados da API pokemon.
+ */
 public abstract class RequestClass
 {
-	protected String nome;
-	protected int ID;
+	protected String nome; 	// nomed pokemon
+	protected int ID;		// id do pokemon
 	
-	public String getNome() { return nome; }
-	public int getID() { return ID; }
+	// TODO: Conferir se está sendo usado e remover
+	public String getNome() { return nome; 	}
+	public int getID() 		{ return ID; 	}
 	
-	public String toString()
-	{
-		String data = this.getClass().getSimpleName() + ": " +
-				nome + "\nID: " + ID;
-		
-		return data;
-	}
 	
-	/* Pegar dados relevantes do JSON gerado */
+	/* Pegar String com todos os dados do pokemon e retornar em um JSONObject */
 	protected JSONObject parse(String data)
 	{
+		JSONObject root;
+		
 		try
 		{
-			JSONObject root = new JSONObject(data);
-			
+			root = new JSONObject(data);
 			return root;
 		}
-		
-		catch (Exception e)
+		catch (JSONException e)
 		{
+			// TODO: Tratar este erro!
 			e.printStackTrace();
 		}
 		
 		return null;
 	}
 	
-	/* Requisição Https */
+	
+	/* Fazer a requisição Https e retornar os dados coletados em uma string */
 	protected String get(String url)
 	{
 		String data = "";
@@ -47,18 +52,18 @@ public abstract class RequestClass
 			data = Request.Get(url).execute().returnContent().asString();
 		}
 		
-		catch (Exception e) 
+		catch (IOException e)
 		{
+			// TODO Auto-generated catch block
 			e.printStackTrace();
+		} 
+		
+		catch(IllegalStateException e)
+		{
+			//TODO: Tratar error: URL INVÁLIDA
+			e.printStackTrace(); 
 		}
 		
 		return data;
-	}
-	
-	
-	
-	public void printInfo()
-	{
-		System.out.println(toString());
 	}
 }

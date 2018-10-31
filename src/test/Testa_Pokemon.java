@@ -7,10 +7,17 @@ public class Testa_Pokemon
 
 	public static void main(String[] args)
 	{
-		Pokemon p = new Pokemon("caterpie");
+		// testes pokemon
 		
-		System.out.println(p.getTipo_pokemon());
-					
+		// Pelo iD
+		
+		Pokemon p1 = new Pokemon(1);
+		System.out.println(p1);
+		
+		/*
+		// Pelo nome
+		Pokemon p2 = new Pokemon("bulbasaur");
+		System.out.println(p2);
+		*/
 	}
 }
-

@@ -1,5 +1,10 @@
 package testes;
 
+import java.io.IOException;
+
+import org.apache.http.client.HttpResponseException;
+import org.json.JSONException;
+
 import model.Pokemon;
 
 public class Testa_Pokemon
@@ -11,8 +16,29 @@ public class Testa_Pokemon
 		
 		// Pelo iD
 		
-		Pokemon p1 = new Pokemon(1);
-		System.out.println(p1);
+		//System.out.println("Prra!");
+		
+		Pokemon p1;
+		
+		try
+		{
+			p1 = new Pokemon("durval");
+		}
+		catch (HttpResponseException e)
+		{
+			System.out.println("Pokemon não achado!");
+		} catch (IllegalStateException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		//System.out.println(p1.getPoke_Id());
 		
 		/*
 		// Pelo nome

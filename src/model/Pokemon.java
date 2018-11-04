@@ -1,9 +1,9 @@
 package model;
 
+import java.io.IOException;
 import java.util.AbstractMap;
 import java.util.AbstractMap.SimpleImmutableEntry;
 import java.util.Vector;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -15,171 +15,154 @@ import org.json.JSONObject;
  * Os métodos get e parse foram herdados da classe RequestClass
  * onde está implementado os métodos de requisição https
  */
-public class Pokemon extends RequestClass
+public class Pokemon extends RequestClass implements Runnable
 {
-	/* ATRIBUTOS */
-	//TODO: Adicionar atributo imagem
 	private String nome;
-	private int id, hp, att, def, spAtt, spDef, speed;
+	private int Poke_id, hp, att, def, spAtt, spDef, speed;
 	private double altura, peso;
 	private Vector<String> tipo_pokemon;
-	
-	// Este atributo serve para carregar as habilidades do pokemon
-	private JSONObject root;
-	
-	// Um vector com todos as habilidades do pokemon 
-	// (um par de string -> nome da habilidade, descrição)
-	private Vector<AbstractMap.SimpleImmutableEntry
-	<String, String>> habilidades;
-	
-	
-	/* CONSTRUTORES */
-	
-	// Procurar um pokemon de acordo com seu ID
-	public Pokemon(int id)
-	{
-		String data = "";
-		
-		try
-		{
-			data = get("https://pokeapi.co/api/v2/pokemon/" + id);
-		}
-		
-		catch (Exception e)
-		{
-			e.printStackTrace();
-			// TODO: Tratar Erro 
-			
-		}
-		init_pokemon(data);
-	}
-	
-	public Pokemon(JSONObject url)
-	{
-		String data = "";
-		
-		try
-		{
-			data = get(url.getString("url"));
-		}
-		
-		catch (Exception e)
-		{
-			e.printStackTrace();
-			// TODO: Tratar Erro 
-			
-		}
-		
-		init_pokemon(data);
-	}
-	
-	// Procurar um pokemon de acordo com seu nome
-	public Pokemon(String nome)
-	{
-		String data = "";
-		
-		try
-		{
-			data = get("https://pokeapi.co/api/v2/pokemon/" + nome);
-		}
-		
-		catch (Exception e)
-		{
-			e.printStackTrace();
-		}
-		
-		init_pokemon(data);
-	}
-	
-	
-	// MÉTODOS PRIVADOS
 
-	//TODO: Adicionar método para baixar imagem do pokemon
+	// Este atributo guarda dados do pokemon para serem processados
+	// quando solicitado com a finalidade de diminuir o tempo de
+	// criação de uma lista de pokemons de um determinado tipo
+	private JSONObject root;
+
+	// Este atributo guarda um conjunto de pares de string, referentes
+	// ao nome de uma habilidade e sua respectiva descrição
+	private Vector<AbstractMap.SimpleImmutableEntry
+	<String, String>> habilidades = null;
+
 	
-	// Método para criar um pokemon com os dados retornados da API
-	private void init_pokemon(String data)
+	// Construtor utilizado para criar um pokemon com seu id
+	public Pokemon(int id) throws IllegalStateException, IOException, JSONException
+	{
+		String data = "";
+
+		data = get("https://pokeapi.co/api/v2/pokemon/" + id);
+		
+		init_pokemon(data);
+	}
+
+	// Construtor utilizado para criar um pokemon com sua url
+	public Pokemon(JSONObject url) throws JSONException, IllegalStateException, IOException
+	{
+		String data = "";
+
+		data = get(url.getString("url"));
+
+		init_pokemon(data);
+	}
+
+	// Construtor utilizado para criar um pokemon com seu nome
+	public Pokemon(String nome) throws JSONException, IllegalStateException, IOException
+	{
+		String data = "";
+		
+		data = get("https://pokeapi.co/api/v2/pokemon/" + nome);
+
+		init_pokemon(data);
+	}
+
+	// Inicializador em comum de todos os contrutores diferentes
+	private void init_pokemon(String data) throws JSONException
 	{
 		// Se a string data estiver vazio é criado um pokemon vazio
 		if(data.equals(""))
 		{
 			nome = "";
-			id = hp = att = def = spAtt = spDef = speed = 0;
+			Poke_id = hp = att = def = spAtt = spDef = speed = 0;
 			altura = peso = 0.0;
 			habilidades = null;
 		}
-		
+
 		else
 		{		
 			this.root = parse(data);
+
+			Poke_id = root.getInt("id");
+			nome = root.getString("name");
+			altura = root.getInt("height") / 10.0; 	// metros
+			peso = root.getInt("weight") / 10.0;	// Kilogramas
+
+			/* Carrega atributos hp, att, def,
+			 * spAtt, spDef, speed */
 			
-			try
-			{
-				id = root.getInt("id");
-				nome = root.getString("name");
-				altura = root.getInt("height") / 10.0; 	// metros
-				peso = root.getInt("weight") / 10.0;	// Kilogramas
-				
-				/* Carrega atributos hp, att, def,
-				 * spAtt, spDef, speed */
-				load_stats(root);
-				
-				/* Carrega o tipos do pokemon */
-				load_types(root);				
-			}
+			load_stats(root);
+
+			/* Carrega o tipos do pokemon */
 			
-			catch (JSONException e)
-			{
-				e.printStackTrace();
-			}
-			
-			
+			load_types(root);
 		}
 	}
 
-	/* Carrega o nome e descrições das habilidades do pokemon */
-	// Este método demora cerca de 20s
-	public void load_abilities(JSONObject root) throws JSONException
+	// Método utilizado para carregar as habilidades e suas respectivas
+	// descrições
+	public void load_abilities()
+	{
+		// Eu tentei usar threads para esconder os '20s' de demora
+		// para processar todas as habilidades, porém não consegui
+		// bloquear alguns botões da tela 'buscador_pokemon' enquanto
+		// essa thread não finalizasse..
+		new Thread(this).start();
+		
+		// run();
+	}
+
+	public void run()
 	{		
 		// vector de habilidades, pares (habilidade, descrição da habilidade)
-		habilidades = new Vector<AbstractMap.SimpleImmutableEntry
-				<String, String>>();
+		habilidades = new Vector< AbstractMap.SimpleImmutableEntry<String, String> >();
+
+		JSONArray moves = null;
 		
-		JSONArray moves = root.getJSONArray("moves");
+		try 
+		{
+			moves = root.getJSONArray("moves");
+		}
 		
+		catch (JSONException e)
+		{
+			e.printStackTrace();
+		}
+
 		// Este método demora cerca de 20s para completar
 		for(int i=0; i<moves.length(); i++)
 		{
-			// Nome da habilidade
-			String move = moves.getJSONObject(i).getJSONObject("move")
-					.getString("name");	
+			String move;
 			
-			// url para a descrição da habilidade
-			String url = moves.getJSONObject(i)
-					.getJSONObject("move").getString("url");
-			
-			// Pego toda informação que estiver na url
-			String data = get(url);
-			
-			// Interpreto a string 'data' com um Json Object
-			JSONObject root_move = parse(data);
-			
-			// Descrição do habilidade
-			String move_descrtion = root_move
-					.getJSONArray("flavor_text_entries")
-					.getJSONObject(2).getString("flavor_text")
-					.replace("\n", "");
-			
-			// Adiciono a nova habilidade no vector de habilidades
-			habilidades.add(new SimpleImmutableEntry<String, String>
-			(move, move_descrtion));
+			try
+			{
+				// Nome da habilidade
+				move = moves.getJSONObject(i).getJSONObject("move")
+						.getString("name");
+
+				// url para a descrição da habilidade
+				String url = moves.getJSONObject(i)
+						.getJSONObject("move").getString("url");
+
+				// Pego toda informação que estiver na url
+				String data = get(url);
+
+				// Interpreto a string 'data' com um JSON Object
+				JSONObject root_move = parse(data);
+
+				// Descrição da habilidade
+				String move_descrtion = root_move
+						.getJSONArray("flavor_text_entries")
+						.getJSONObject(2).getString("flavor_text")
+						.replace("\n", "");
+
+				// Adiciono a nova habilidade no vector de habilidades
+				habilidades.add(new SimpleImmutableEntry<String, String>
+				(move, move_descrtion));	
+			}
+
+			catch (JSONException | IllegalStateException
+					| IOException e)
+			{
+				e.printStackTrace();
+			}
 		}
-		
-		/*
-		long startTime = System.nanoTime();
-		long endTime   = System.nanoTime();
-		long totalTime = endTime - startTime;
-		System.out.println(totalTime/1000000000 + " Segundos");
-		*/
 	}
 
 	/* Este método pega os tipos do pokemon do json objecton */
@@ -201,53 +184,50 @@ public class Pokemon extends RequestClass
 	{
 		/* Filtrar e salvar stats do pokemon */
 		JSONArray aux = root.getJSONArray("stats");
-		
+
 		for(int i=0; i<aux.length(); i++)
 		{
 			int laux = aux.getJSONObject(i).getInt("base_stat");
-			
+
 			switch(i)
 			{
-				case 0:
-					speed = laux;
-					break;
-				case 1:
-					spDef = laux;
-					break;
-				case 2:
-					spAtt = laux;
-					break;
-				case 3:
-					def = laux;
-					break;
-				case 4:
-					att = laux;
-					break;
-				case 5:
-					hp = laux;
-					break;
+			case 0:
+				speed = laux;
+				break;
+			case 1:
+				spDef = laux;
+				break;
+			case 2:
+				spAtt = laux;
+				break;
+			case 3:
+				def = laux;
+				break;
+			case 4:
+				att = laux;
+				break;
+			case 5:
+				hp = laux;
+				break;
 			}
 		}
 	}
 	
-	// MÉTODOS PUBLICOS
 	
 	// Este método serve para utilizar o sout(pokemon)
 	// System.out.println(pokemon); <-- Exemplo
 	public String toString()
 	{
 		return ("Nome: " + this.getNome() +
-				"\nID: " + this.getId());
+				"\nID: " + this.getPoke_Id());
 	}
-	
-	/* GETTERS & SETTERS */
-	
+
 	/* ID */
-	public int getId() { return id; }
+	public int getPoke_Id() { return Poke_id; }
 
 	/* Nome */
 	public String getNome() { return nome; }
-	
+
 	/* HP */
 	public int getHp() { return hp; }
 
@@ -256,7 +236,7 @@ public class Pokemon extends RequestClass
 
 	/* Defesa */
 	public int getDef() { return def; }
-	
+
 	/* Velocidade do Ataque */
 	public int getSpAtt() { return spAtt; }
 
@@ -271,7 +251,7 @@ public class Pokemon extends RequestClass
 
 	/* Peso */
 	public double getPeso() { return peso; }
-	
+
 	/* Tipo do Pokemon */
 	public Vector<String> getTipo_pokemon() { return tipo_pokemon; }
 

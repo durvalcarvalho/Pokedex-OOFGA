@@ -1,3 +1,12 @@
-# Exercício Programado 2
+# Pokedex Pokémon
 
-Acesse a descrição completa deste exercício na [wiki](https://gitlab.com/oofga/eps/eps_2018_2/ep2/wikis/home).
+Este Projeto contém um programa feito em **JAVA** capaz de visualizar informações de pokemons obtidas da **The RESTful Pokémon API**.
+
+As principais funcionalidades são:
+- Visualizar a imagem dos pokémons
+- Visualizar os stats dos pokémons (att, def, speed, HP, SpAtt, SpDef)
+- Visualizar o nome e descrição de habilidades dos pokemons
+- Buscar pokemons através do nome
+- Buscar pokemons através do tipo
+
+## Para executar o programa siga os passos abaixo

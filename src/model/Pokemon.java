@@ -88,15 +88,14 @@ public class Pokemon extends RequestClass
 
 			/* Carrega atributos hp, att, def,
 			 * spAtt, spDef, speed */
-			
 			load_stats(root);
 
 			/* Carrega o tipos do pokemon */
-			
 			load_types(root);
 		}
 	}
 
+	// Método para carregar todos as habilidades do pokemon
 	public void load_abilities()
 	{		
 		// vector de habilidades, pares (habilidade, descrição da habilidade)
@@ -106,6 +105,7 @@ public class Pokemon extends RequestClass
 		
 		try 
 		{
+			// É criado um JSONArray com todas habilidades
 			moves = root.getJSONArray("moves");
 		}
 		
@@ -114,17 +114,17 @@ public class Pokemon extends RequestClass
 			e.printStackTrace();
 		}
 		
-		// Tela de Loading
+		// É aberto uma tela de loading
 		Tela_Carregando tc = new Tela_Carregando();
 
-		// Este método demora cerca de 20s para completar
+		// Para cada habilidade do JSONArray
 		for(int i=0; i<moves.length(); i++)
 		{
+			// Método para atualizar o progesso do loop na tela de loading
+			int progess = (int) (i*100.00/moves.length());
+			tc.setPorcentagem(progess);
+			
 			String move;
-			
-			int j = (int) (i*100.00/moves.length());
-			tc.setPorcentagem(j);
-			
 			try
 			{
 				// Nome da habilidade
@@ -135,13 +135,13 @@ public class Pokemon extends RequestClass
 				String url = moves.getJSONObject(i)
 						.getJSONObject("move").getString("url");
 
-				// Pego toda informação que estiver na url
+				// Pego toda informação que estiver na url em forma de string
 				String data = get(url);
-
+				
 				// Interpreto a string 'data' com um JSON Object
 				JSONObject root_move = parse(data);
-
-				// Descrição da habilidade
+				
+				// Pego a descrição da habilidade
 				String move_descrtion = root_move
 						.getJSONArray("flavor_text_entries")
 						.getJSONObject(2).getString("flavor_text")
@@ -149,72 +149,56 @@ public class Pokemon extends RequestClass
 
 				// Adiciono a nova habilidade no vector de habilidades
 				habilidades.add(new SimpleImmutableEntry<String, String>
-				(move, move_descrtion));	
+				(move, move_descrtion));
 			}
 
-			catch (JSONException | IllegalStateException
-					| IOException e)
+			catch (JSONException | IllegalStateException | IOException e)
 			{
 				e.printStackTrace();
 			}
 		}
 	}
 
-	/* Este método pega os tipos do pokemon do json objecton */
+	/* Este método busca os tipos do pokemon do JSONObject */
 	private void load_types(JSONObject root) throws JSONException
 	{
-		/* Filtrar e salvar o tipo do pokemon */
 		tipo_pokemon = new Vector<String>();
+		
 		JSONArray aux = root.getJSONArray("types");
+		
+		// Para do pokemon ter mais de um tipo "<eletric, flying>"
 		for(int i = 0; i < aux.length(); i++)
 		{
 			String tipo = aux.getJSONObject(i).getJSONObject("type")
 					.getString("name");
+			
 			tipo_pokemon.add(tipo);
 		}
 	}
 
-	/* Este método pega os stats do pokemon do json objecton */
+	/* Este método busca os stats do pokemon do JSONObject */
 	private void load_stats(JSONObject root) throws JSONException
 	{
 		/* Filtrar e salvar stats do pokemon */
 		JSONArray aux = root.getJSONArray("stats");
 
+		// Os stats estão em um JSONArray e em uma ordem definida
 		for(int i=0; i<aux.length(); i++)
 		{
+			// Pego o valor do JSONArray
 			int laux = aux.getJSONObject(i).getInt("base_stat");
 
+			// Interpreto onde deve ser salvo
 			switch(i)
 			{
-			case 0:
-				speed = laux;
-				break;
-			case 1:
-				spDef = laux;
-				break;
-			case 2:
-				spAtt = laux;
-				break;
-			case 3:
-				def = laux;
-				break;
-			case 4:
-				att = laux;
-				break;
-			case 5:
-				hp = laux;
-				break;
+				case 0: speed = laux; break;
+				case 1: spDef = laux; break;
+				case 2: spAtt = laux; break;
+				case 3: def   = laux; break;
+				case 4: att   = laux; break;
+				case 5: hp    = laux; break;
 			}
 		}
-	}
-	
-	
-	// Este método serve para utilizar o sout(pokemon)
-	// System.out.println(pokemon); <-- Exemplo
-	public String toString()
-	{
-		return ("Nome: " + this.getNome() +
-				"\nID: " + this.getPoke_Id());
 	}
 
 	/* ID */
@@ -250,7 +234,7 @@ public class Pokemon extends RequestClass
 	/* Tipo do Pokemon */
 	public Vector<String> getTipo_pokemon() { return tipo_pokemon; }
 
-	/* Lista de habilidades (pares: {habiliadde, descrição} ) */
+	/* Lista de habilidades (pares: {habiliadde, descrição}) */
 	public Vector<AbstractMap.SimpleImmutableEntry<String, String>>
 	getHabilidades() { return habilidades; }
 }

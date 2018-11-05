@@ -15,18 +15,17 @@ import org.json.JSONObject;
  */
 public abstract class RequestClass
 {
+	// Atriutos e métodos necessários para utilizar os métodos do pacote Apache
 	protected String nome;
 	protected int ID;
-	
 	public String getNome() { return nome; 	}
 	public int getID() 		{ return ID; 	}
 	
 	
-	/* Pegar String com todos os dados do pokemon e retornar em um JSONObject */
+	// Pegar String com todos os dados do pokemon e retornar em um JSONObject
 	protected JSONObject parse(String data) throws JSONException
 	{
-		JSONObject root;
-		root = new JSONObject(data);
+		JSONObject root = new JSONObject(data);
 		
 		return root;
 	}
@@ -34,10 +33,8 @@ public abstract class RequestClass
 	
 	/* Fazer a requisição Https e retornar os dados coletados em uma string */
 	protected String get(String url)  throws HttpResponseException, IOException, IllegalStateException
-	{
-		String data = "";
-		
-		data = Request.Get(url).execute().returnContent().asString();
+	{	
+		String data = Request.Get(url).execute().returnContent().asString();
 	
 		return data;
 	}

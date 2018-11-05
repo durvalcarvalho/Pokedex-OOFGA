@@ -39,8 +39,6 @@ public class Pokedex extends JFrame
 	private JLabel Pokemon_Img;
 	
 	private JLabel img_pokemon_not_found;
-	private JLabel loading_img;
-	private JLabel loading_percentage;
 	
 	private Choice choice;
 	
@@ -253,22 +251,11 @@ public class Pokedex extends JFrame
 		Habilidades_btn.addActionListener(new ActionListener()
 		{
 			public void actionPerformed(ActionEvent e)
-			{
-				// TODO: Arrumar uma maneira de avisar que vai demorar
-				// TODO: Loading Tela -> Como fazer?
-				
+			{	
 				// Se algum pokemon tiver sido escolhido
 				if(! (Atual_Pokemon == null))
-				{
-					loading_img.setVisible(true);
-					Atual_Pokemon.load_abilities();					
-					try { Thread.sleep(10000); } catch (InterruptedException e1) {}
-					loading_img.setVisible(false);
-					
-					
-					
-					new Habilidades_Pokemon(Atual_Pokemon);
-					
+				{	
+					new Habilidades_Pokemon(Atual_Pokemon);	
 				}
 			}
 		});
@@ -318,18 +305,6 @@ public class Pokedex extends JFrame
 		img_pokemon_not_found.setBounds(360, 40, 225, 15);
 		img_pokemon_not_found.setVisible(false);
 		main_Panel.add(img_pokemon_not_found);
-		
-		// TEXTO E IMAGEM DE LOADING
-		loading_img = new JLabel("");
-		loading_img.setIcon(new ImageIcon(Pokedex.class.getResource("/view/Imagens/loading.gif")));
-		loading_img.setBounds(275, 190, 100, 100);
-		main_Panel.add(loading_img);
-		loading_img.setVisible(false);
-		
-		loading_percentage = new JLabel("100 %");
-		loading_percentage.setBounds(310, 300, 40, 15);
-		main_Panel.add(loading_percentage);
-		loading_percentage.setVisible(false);
 		
 		// Método que adiciona os pokemons capturados no choice
 		pokemons_capturados();

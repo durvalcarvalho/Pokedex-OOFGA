@@ -47,20 +47,6 @@ public class Buscador_Pokemon extends JDialog
 		else
 			return null;
 	}
-	
-	// TODO: REMOVER DEPOIS
-	public static void main(String[] args)
-	{
-		try
-		{
-			Buscador_Pokemon frame = new Buscador_Pokemon();
-		}
-		
-		catch (Exception e)
-		{
-			e.printStackTrace();
-		}
-	}
 
 	public Buscador_Pokemon()
 	{
@@ -88,7 +74,7 @@ public class Buscador_Pokemon extends JDialog
 		String[] tipos_conhecidos = {"normal","fighting","flying",
 				"poison","ground","rock","bug","ghost","steel",
 				"fire","water","grass","electric","psychic","ice",
-				"dragon","dark","fairy","shadow"};
+				"dragon","dark","fairy"};
 
 		for(int i=0; i<tipos_conhecidos.length; i++)
 		{
@@ -147,19 +133,28 @@ public class Buscador_Pokemon extends JDialog
 				// Se o campo de texto estiver vazio é feito uma pesquisa por tipo
 				if(poke_textField.isEmpty())
 				{
-					String tipo = Pokemon_choice_Tipo.getSelectedItem();
+					String tipo = Pokemon_choice_Tipo.getSelectedItem()
+							.toLowerCase();					
 					
-					// Remover do "log" pesquisas anteriores
-					poke_names.clear();
+					Thread t2 = new Thread()
+					{
+						public void run()
+						{	
+							// Remover do "log" pesquisas anteriores
+							poke_names.clear();
+							
+							// Classe que realiza a busca por tipo
+							Pokemon_Tipo pt = new Pokemon_Tipo();
+							
+							// Método que realiza as requisições dos pokemons de um determinado tipo
+							poke_names = pt.Pokemon_type(tipo);
+							
+							// Método para mostrar os pokemons filtrados por tipo
+							choice_pokemons();
+						}	
+					};
 					
-					// Classe que realiza a busca por tipo
-					Pokemon_Tipo pt = new Pokemon_Tipo();
-					
-					// Método que realiza as requisições dos pokemons de um determinado tipo
-					poke_names = pt.Pokemon_type(tipo.toLowerCase());
-					
-					// Método para mostrar os pokemons filtrados por tipo
-					choice_pokemons();
+					t2.start();
 				}
 
 				// Caso tenha alguma coisa digitada, buscar pelo nome do pokemon

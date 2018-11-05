@@ -8,21 +8,41 @@ import model.Pokemon;
 import javax.swing.JLabel;
 import java.awt.Font;
 import javax.swing.JTextPane;
+import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
+import java.net.URL;
 import java.awt.event.ActionEvent;
 import java.awt.Choice;
 
 //TODO: Colocar uma imagem do pokemon em questão
 
 @SuppressWarnings("serial")
-public class Habilidades_Pokemon extends JFrame
+public class Habilidades_Pokemon extends JFrame implements Runnable
 {
 
 	private JPanel Habilidades_Panel;
+	private Pokemon pokemon;
+	private JLabel img_pokemon;
 	
+	//public void run()
 	public Habilidades_Pokemon(Pokemon pokemon)
 	{
+		if(pokemon!= null)
+		{
+			this.pokemon = pokemon;
+			new Thread(this).start();			
+		}
+	}
+	
+	//public Habilidades_Pokemon(Pokemon pokemon)
+	public void run()
+	{
+		setUndecorated(true);
+		
 		pokemon.load_abilities();
 		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -80,11 +100,33 @@ public class Habilidades_Pokemon extends JFrame
 		Descricao_btn.setBounds(160, 210, 117, 25);
 		Habilidades_Panel.add(Descricao_btn);
 		
+		img_pokemon = new JLabel("");
+		img_pokemon.setIcon(new ImageIcon(Habilidades_Pokemon.class.getResource("/view/Imagens/test.png")));
+		img_pokemon.setBounds(177, 77, 89, 75);
+		Habilidades_Panel.add(img_pokemon);
+		
+		int id = pokemon.getPoke_Id();
+		changeImage(id);
+		
 		for(int i=0; i<pokemon.getHabilidades().size(); i++)
-		{			
+		{	
 			Habilidade_choice.add(pokemon.getHabilidades().get(i).getKey());
 		}
 		
 		setVisible(true);
+	}
+	
+	public void changeImage(int id)
+	{		
+		try
+		{
+			URL url = new URL("https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/"+id+".png");
+			BufferedImage image = ImageIO.read(url);
+			img_pokemon.setIcon(new ImageIcon(image));
+		}
+		catch (IllegalStateException | IOException e)
+		{
+			img_pokemon.setText("Este pokemon não tem imagem!");
+		}
 	}
 }

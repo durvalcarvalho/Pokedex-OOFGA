@@ -48,33 +48,57 @@ Abra o terminal no mesmo diretório onde foi baixado o jar e execute o comando:
 #### Uso da aplicação
 
 ##### Escolha um treinador ou cadastre um novo
+
 ![login](src/view/Imagens/Login_Pokedex.png)
 
 ##### Caso tenha escolhido o cadastro, preencha o formulário
+
 ![cadastro](src/view/Imagens/Cadastro_Treinador.png)
 
-##### Pokedex
+##### Uso da Pokedex
+
 ![pokedex](src/view/Imagens/Pokedex.png)
 
-##### Adicione um novo pokemon
+##### Adicione pokemons
+
 ![novo_pokemon](src/view/Imagens/Procurar_Pokemon.png)
 
-##### Realize uma busca por nome ou por tipo
+##### Realize buscas por nome ou por tipo
+
 ###### Por nome
+
+Digite o nome do pokemon desejado e aperte "Buscar Pokemon"
+
 ![busca_por_nome](src/view/Imagens/busca_por_nome.png)
 
 ###### Por tipo
+
+Escolha a categoria do seu pokemon e aperte "Buscar Pokemon"
+
 ![busca_por_tipo](src/view/Imagens/busca_por_tipo.png)
-Aguarde enquanto a busca é realizada
+
+
+Espere enquanto a busca é realizada
+
 
 Após encontrar o pokemon desejado, clique 'Capturar Pokemon'
 
 ##### Visualize os dados do pokemon capturado
+
+Selecione o pokemon que deseja ver os dados e aperte "Visualizar"
+
 ![pokemon_capturado](src/view/Imagens/Pokemon_Capturado.png)
 
 ##### Veja as habilidades do pokemon selecionado
+
+Selecione o pokemon que deseja ver as habilidades e aperte "Habilidades"
+
 ![habilidades_pokemon](src/view/Imagens/habilidades_do_pokemon.png)
+
 Aguarde enquanto as habilidades são carregadas
 
 ##### Explore as habilidades e descrições
+
+Escolha uma habilidade e aperte "Descrição"
+
 ![habilidades_descrição](src/view/Imagens/habilidades_e_descrição_pokemon.png)

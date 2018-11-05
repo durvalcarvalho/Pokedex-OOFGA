@@ -1,4 +1,4 @@
-package testes;
+package test;
 
 import java.util.Vector;
 

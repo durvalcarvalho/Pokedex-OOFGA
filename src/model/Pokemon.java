@@ -8,6 +8,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import view.Tela_Carregando;
+
 /** 
  * Essa classe foi pensada para criar os objetos pokemons de acordo
  * com o "nome" , "id" ou pelo "url" do pokemon na API
@@ -15,7 +17,7 @@ import org.json.JSONObject;
  * Os métodos get e parse foram herdados da classe RequestClass
  * onde está implementado os métodos de requisição https
  */
-public class Pokemon extends RequestClass implements Runnable
+public class Pokemon extends RequestClass
 {
 	private String nome;
 	private int Poke_id, hp, att, def, spAtt, spDef, speed;
@@ -95,20 +97,7 @@ public class Pokemon extends RequestClass implements Runnable
 		}
 	}
 
-	// Método utilizado para carregar as habilidades e suas respectivas
-	// descrições
 	public void load_abilities()
-	{
-		// Eu tentei usar threads para esconder os '20s' de demora
-		// para processar todas as habilidades, porém não consegui
-		// bloquear alguns botões da tela 'buscador_pokemon' enquanto
-		// essa thread não finalizasse..
-		new Thread(this).start();
-		
-		// run();
-	}
-
-	public void run()
 	{		
 		// vector de habilidades, pares (habilidade, descrição da habilidade)
 		habilidades = new Vector< AbstractMap.SimpleImmutableEntry<String, String> >();
@@ -124,11 +113,17 @@ public class Pokemon extends RequestClass implements Runnable
 		{
 			e.printStackTrace();
 		}
+		
+		// Tela de Loading
+		Tela_Carregando tc = new Tela_Carregando();
 
 		// Este método demora cerca de 20s para completar
 		for(int i=0; i<moves.length(); i++)
 		{
 			String move;
+			
+			int j = (int) (i*100.00/moves.length());
+			tc.setPorcentagem(j);
 			
 			try
 			{

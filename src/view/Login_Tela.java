@@ -4,7 +4,6 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
-import controller.Controller;
 import model.Treinador;
 
 import javax.swing.JLabel;
@@ -17,20 +16,13 @@ import javax.swing.ImageIcon;
 
 @SuppressWarnings("serial")
 public class Login_Tela extends JFrame
-{
-	private JPanel contentPane;
-	public Login_Tela(Controller controller)
-	{
-		init_Components();
-	}
-	
-
-	public void init_Components()
+{	
+	public Login_Tela()
 	{
 		/* Configurações sobre a tela */
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(350, 150, 650, 500);
-		contentPane = new JPanel();
+		JPanel contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
@@ -41,7 +33,7 @@ public class Login_Tela extends JFrame
 		lblBemVindoA.setBounds(200, 45, 270, 30);
 		contentPane.add(lblBemVindoA);
 		
-		/* label de pedindo ação do usuário */
+		/* label pedindo ação do usuário */
 		JLabel lblSelecioneUmTreinador = new JLabel("Selecione "
 				+ "um treinador");
 		lblSelecioneUmTreinador.setFont(new Font("Ubuntu Mono", 
@@ -56,6 +48,7 @@ public class Login_Tela extends JFrame
 		{
 			public void actionPerformed(ActionEvent e)
 			{
+				// Informações conhecidas do ash
 				Treinador ash = new Treinador("Ash Ketchum", 
 						"Masculino ♂", "Pallet", "Kanto", 10);
 				
@@ -71,9 +64,11 @@ public class Login_Tela extends JFrame
 				   serem criados futuramente a partir destes nomes */
 				ash.set_nomes_pokemons(nome_pokemons);
 				
+				// A tela pokedex é aberta com as informações do ash
 				Pokedex ct = new Pokedex(ash);
 				ct.setVisible(true);
 				
+				// A tela login fica indisponível
 				setVisible(false);
 			}
 		});
@@ -93,6 +88,7 @@ public class Login_Tela extends JFrame
 		{
 			public void actionPerformed(ActionEvent e)
 			{
+				// Informações conhecidas do Brock
 				Treinador brock = new Treinador("Brock", "Masculino ♂"
 						, "Pewter", "Kanto", 15);
 				
@@ -104,11 +100,15 @@ public class Login_Tela extends JFrame
 				nome_pokemons.addElement("vulpix");
 				nome_pokemons.addElement("mudkip");
 				
+				/* Os nomes são salvos para os objetos pokemons
+				   serem criados futuramente a partir destes nomes */
 				brock.set_nomes_pokemons(nome_pokemons);				
 				
+				// A tela pokedex é aberta com as informações do brock 
 				Pokedex ct = new Pokedex(brock);
 				ct.setVisible(true);
 				
+				// Tela de login fica indisponível
 				setVisible(false);
 			}
 		});
@@ -128,6 +128,7 @@ public class Login_Tela extends JFrame
 		{
 			public void actionPerformed(ActionEvent e)
 			{
+				// Informações conhecidas da misty
 				Treinador misty =  new Treinador("Misty", "Feminino ♀",
 						"Cerulean", "Kanto", 10);
 				
@@ -139,11 +140,15 @@ public class Login_Tela extends JFrame
 				nome_pokemons.addElement("togepi");
 				nome_pokemons.addElement("horsea");
 				
+				/* Os nomes são salvos para os objetos pokemons
+				   serem criados futuramente a partir destes nomes */
 				misty.set_nomes_pokemons(nome_pokemons);
 				
+				// A pokedex é aberta com as informações da misty
 				Pokedex ct = new Pokedex(misty);
 				ct.setVisible(true);
 				
+				// A tela de login fica indisponível
 				setVisible(false);
 			}
 		});
@@ -156,7 +161,7 @@ public class Login_Tela extends JFrame
 		misty_img.setBounds(490, 215, 100, 100);
 		contentPane.add(misty_img);
 		
-		
+		// Label "Cadastre um treinador"
 		JLabel new_trainer_label = new JLabel("Cadastre um treinador");
 		new_trainer_label.setFont(new Font("Ubuntu Mono",
 				Font.BOLD, 20));
@@ -170,16 +175,18 @@ public class Login_Tela extends JFrame
 		{
 			public void actionPerformed(ActionEvent e)
 			{
-				
+				// Abrir a tela de cadastro de novo treinador
+				@SuppressWarnings("unused")
 				Cadastro_Treinador ct = new Cadastro_Treinador();
-				ct.setVisible(true);
 				
+				// Tela de login fica indisponível
 				setVisible(false);
 			}
 		});
 		Cadastro_button.setBounds(260, 420, 135, 25);
 		contentPane.add(Cadastro_button);
 		
+		// Após construir todos os elementos no panel, a tela fica disponível
 		setVisible(true);
 	}
 }

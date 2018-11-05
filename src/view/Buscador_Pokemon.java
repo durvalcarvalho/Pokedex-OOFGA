@@ -27,26 +27,19 @@ import java.awt.event.ActionEvent;
 import java.awt.Color;
 
 @SuppressWarnings("serial")
+/**
+ * Essa classe implementa um JDialog que põe em espera a JFrame que a chamou
+ * 
+ * Este JDialog serve para realizar buscas de acordo com o nome ou tipo na Pokeapi
+ */
 public class Buscador_Pokemon extends JDialog
 {
-	// Elementos da tela
-	private JPanel Buscador_Panel;
-	private JTextField Pokemon_Nome_textField;
+	// Estes atributos são utilizados pelos métodos de atualização da tela
 	private JLabel Pokemon_Img;
 	private JLabel lblPokemonNoEncontrado;
 	private Choice Pokemon_achados_choice;
-	
 	private Vector<String> poke_names = new Vector<String>();
-	
 	private Pokemon atual_pokemon = null;
-	
-	public String getPokemon()
-	{
-		if(atual_pokemon != null)
-			return atual_pokemon.getNome();
-		else
-			return null;
-	}
 
 	public Buscador_Pokemon()
 	{
@@ -54,42 +47,50 @@ public class Buscador_Pokemon extends JDialog
 		// aguardando enquanto esse JDialog estiver aberto
 		setModal(true);
 
+		// Configurações da tela principal
 		setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 		setBounds(350, 150, 650, 500);
-		Buscador_Panel = new JPanel();
+		JPanel Buscador_Panel = new JPanel();
 		Buscador_Panel.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(Buscador_Panel);
 		Buscador_Panel.setLayout(null);
 
+		// label "procurar pokemon"
 		JLabel ProcurarPokemon_lbl = new JLabel("Procurar Pokemon");
 		ProcurarPokemon_lbl.setFont(new Font("Ubuntu Mono",
 				Font.BOLD, 20));
 		ProcurarPokemon_lbl.setBounds(230, 28, 168, 20);
 		Buscador_Panel.add(ProcurarPokemon_lbl);
 
+		// Choice que irá mostrar os tipos de pokemons existentes
 		Choice Pokemon_choice_Tipo = new Choice();
 		Pokemon_choice_Tipo.setBounds(100, 110, 430, 20);
 		Buscador_Panel.add(Pokemon_choice_Tipo);
 
+		// tipos de pokemons conhecidos
 		String[] tipos_conhecidos = {"normal","fighting","flying",
 				"poison","ground","rock","bug","ghost","steel",
 				"fire","water","grass","electric","psychic","ice",
 				"dragon","dark","fairy"};
 
+		// Loop para adicionar os tipos conhecidos no choice
 		for(int i=0; i<tipos_conhecidos.length; i++)
 		{
 			Pokemon_choice_Tipo.add(tipos_conhecidos[i].toUpperCase());
 		}
 
+		// label "tipo"
 		JLabel Tipo_lbl = new JLabel("Tipo");
 		Tipo_lbl.setBounds(300, 80, 30, 15);
 		Buscador_Panel.add(Tipo_lbl);
 
+		// label "nome"
 		JLabel Nome_lbl = new JLabel("Nome");
 		Nome_lbl.setBounds(300, 150, 40, 15);
 		Buscador_Panel.add(Nome_lbl);
 
-		Pokemon_Nome_textField = new JTextField();
+		// textfield que irá receber o nome do pokemon desejado
+		JTextField Pokemon_Nome_textField = new JTextField();
 		Pokemon_Nome_textField.setBounds(100, 180, 430, 19);
 		Buscador_Panel.add(Pokemon_Nome_textField);
 		Pokemon_Nome_textField.setColumns(10);
@@ -101,11 +102,13 @@ public class Buscador_Pokemon extends JDialog
 		Buscador_Panel.add(lblPokemonNoEncontrado);
 		lblPokemonNoEncontrado.setVisible(false); // default é desligado
 		
-		Pokemon_Img = new JLabel("Pokemon_Name");
+		// label que irá receber a imagem do pokemon
+		Pokemon_Img = new JLabel();
 		Pokemon_Img.setIcon(new ImageIcon(Pokedex.class.getResource("/view/Imagens/0.png")));
 		Pokemon_Img.setBounds(400, 290, 100, 100);
 		Buscador_Panel.add(Pokemon_Img);
 		
+		// choice que irá receber os nomes dos pokemons filtrados
 		Pokemon_achados_choice = new Choice();
 		Pokemon_achados_choice.setBounds(100, 340, 200, 25);
 		Buscador_Panel.add(Pokemon_achados_choice);
@@ -118,24 +121,23 @@ public class Buscador_Pokemon extends JDialog
 		{
 			public void actionPerformed(ActionEvent e)
 			{
-				// O texto de erro é 'desligada' caso tenha sido
-				// acionada em buscas anteriores
+				// O texto de erro é 'desligada' caso tenha sido acionada em buscas anteriores
 				lblPokemonNoEncontrado.setVisible(false);
 				
 				// Trocar a imagem de erro para a imagem padrão 
 				Pokemon_Img.setIcon(new ImageIcon(Pokedex.class
 						.getResource("/view/Imagens/0.png")));
 				
-				// Texto digitado no campo de texto
-				String poke_textField = Pokemon_Nome_textField
-						.getText();
+				// recebo o que foi digitado no textField
+				String poke_textField = Pokemon_Nome_textField.getText();
 
 				// Se o campo de texto estiver vazio é feito uma pesquisa por tipo
 				if(poke_textField.isEmpty())
 				{
-					String tipo = Pokemon_choice_Tipo.getSelectedItem()
-							.toLowerCase();					
+					// Pego o tipo selecionado no campo choice
+					String tipo = Pokemon_choice_Tipo.getSelectedItem().toLowerCase();					
 					
+					// É criado um thread para realizar a busca em paralelo
 					Thread t2 = new Thread()
 					{
 						public void run()
@@ -151,9 +153,13 @@ public class Buscador_Pokemon extends JDialog
 							
 							// Método para mostrar os pokemons filtrados por tipo
 							choice_pokemons();
+							
+							// trocar imagem para o primeiro pokemon do choice
+							changeImage(Pokemon_achados_choice.getSelectedItem());
 						}	
 					};
 					
+					// inicializar a thread
 					t2.start();
 				}
 
@@ -171,8 +177,14 @@ public class Buscador_Pokemon extends JDialog
 						// Adicionar o nome do pokemon pesquisado no log
 						poke_names.add(pokemon.getNome());
 						
+						// atualizar o choice de pokemons
+						choice_pokemons();
+						
 						// Mudar a imagem do pokemon
-						changeImage(pokemon.getNome());			
+						changeImage(pokemon.getNome());
+						
+						// Remover texto digitado no textField
+						Pokemon_Nome_textField.setText("");						
 					}
 					
 					// Caso o nome digitado não seja válido entra nesta exceção
@@ -182,12 +194,9 @@ public class Buscador_Pokemon extends JDialog
 						lblPokemonNoEncontrado.setVisible(true);
 						
 						// Imagem de apoio - Pokemon não encontrado
-						Pokemon_Img.setIcon(new ImageIcon
-								(Pokedex.class.getResource
-										("/view/Imagens/not_found.png")));
+						Pokemon_Img.setIcon(new ImageIcon(Pokedex.class.getResource("/view/Imagens/not_found.png")));
 					}
 					
-					// Outras exceção relacionada com a requisição
 					catch (IllegalStateException | JSONException
 							| IOException e1)
 					{
@@ -216,11 +225,13 @@ public class Buscador_Pokemon extends JDialog
 		Capturar_Pokemon_button.setBounds(230, 440, 190, 25);
 		Buscador_Panel.add(Capturar_Pokemon_button);
 		
+		// botão para criar imagem do pokemon selecionado do choice
 		JButton show_pokemon_btn = new JButton("Visualizar");
 		show_pokemon_btn.addActionListener(new ActionListener()
 		{
 			public void actionPerformed(ActionEvent e)
 			{
+				// Se a imagem erro estiver acionada é desligada
 				lblPokemonNoEncontrado.setVisible(false);
 				
 				// Se alguma busca tiver sido feita, é chamado o método para mudar a imagem
@@ -233,7 +244,7 @@ public class Buscador_Pokemon extends JDialog
 		show_pokemon_btn.setBounds(140, 310, 120, 25);
 		Buscador_Panel.add(show_pokemon_btn);	
 		
-		// Método para tornar this.JDialog visível
+		// Após contruir todos os componentes da tela, esta fica visível
 		setVisible(true);
 	}
 	
@@ -257,16 +268,19 @@ public class Buscador_Pokemon extends JDialog
 
 		try
 		{
+			// O pokemon atual é atualizado
 			atual_pokemon = new Pokemon(pokemon_name);
 			
+			// é criado o link para a imagem do pokemon desejado
 			id = (atual_pokemon.getPoke_Id());
-
 			URL url = new URL("https://raw.githubusercontent.com"
 					+ "/PokeAPI/sprites/master/sprites/pokemon/"
 					+id+".png");
 
+			// É pegado a imagem
 			BufferedImage image = ImageIO.read(url);
 
+			// A imagem do JDialog é atualizado
 			Pokemon_Img.setIcon(new ImageIcon(image));
 		}
 		
@@ -281,5 +295,14 @@ public class Buscador_Pokemon extends JDialog
 					(Pokedex.class.getResource
 							("/view/Imagens/not_found.png")));
 		}
+	}
+	
+	// Método para retornar o ultimo pokemon (atual_pokemon)
+	public String getPokemon()
+	{
+		if(atual_pokemon != null)
+			return atual_pokemon.getNome();
+		else
+			return null;
 	}
 }

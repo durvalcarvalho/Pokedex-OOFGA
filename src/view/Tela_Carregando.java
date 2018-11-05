@@ -9,60 +9,51 @@ import javax.swing.JProgressBar;
 import javax.swing.SwingWorker;
 
 @SuppressWarnings("serial")
-public class Tela_Carregando extends JFrame implements Runnable
-{
-	private JProgressBar progressBar;
-	//private int time_need_in_seconds;
-	
-	// TODO: mudar o nome da variável
+public class Tela_Carregando extends JFrame
+{	
+	// 0 Até 100
 	private int progress;
-
-	public static void main(String[] args)
-	{
-		new Tela_Carregando(/*10*/);
-	}
-
-	private JPanel contentPane;
-
-	//public Tela_Carregando(/*int time_need_in_seconds*/)
-	public void run()
-	{
-		//this.time_need_in_seconds = time_need_in_seconds;
-		new Thread(this).start();
-	}
 	
-	//public void run()
+	/**
+	 * Esta classe implementa uma tela de loading que irá 
+	 * continuar aberta enquanto o atributo progress for menor que 97
+	 */
 	public Tela_Carregando(/*int time_need_in_seconds*/)
 	{
-		// Tirar os butões (x) de fechar do JDialog
+		// Esconder os butões da barra superior do JDialog
 		setUndecorated(true);
-		setVisible(true);
+		
+		// Esta Tela sempre será vista por cima de todas as outras
 		setAlwaysOnTop(true);
 		
+		// Configurações da tela
 		setBounds(625, 350, 110, 135);
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		contentPane = new JPanel();
+		JPanel contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
+		setVisible(true);
 		
+		// label que irá receber gif de loaging
 		JLabel label = new JLabel("");
 		label.setIcon(new ImageIcon(Tela_Carregando.class.getResource("/view/Imagens/loading.gif")));
 		label.setBounds(5, 5, 100, 100);
 		contentPane.add(label);
 		
-		progressBar = new JProgressBar();
+		// Progess Bar que irá carregar
+		JProgressBar progressBar = new JProgressBar();
 		progressBar.setBounds(3, 112, 105, 20);
 		progressBar.setStringPainted(true);
 		progressBar.setValue(0);;
 		contentPane.add(progressBar);
 		
+		// Método para a barra de progresso carregar
 		@SuppressWarnings("rawtypes")
 		final SwingWorker load = new SwingWorker()
 		{
 			protected Object doInBackground() throws Exception
 			{
-				//for(int i=0;i<=100; i++)
 				while(progress < 97)
 				{
 					try

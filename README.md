@@ -12,6 +12,19 @@ As principais funcionalidades são:
   - Busca de pokemons pelo nome
   - Visualização dos pokemons
 
+##### Critérios de avaliação
+
+**Herança**
+Nesta aplicação, o conceito de herança é utilizado nas classes Pokemon e RequestClass. A classe Pokemon herda os métodos da classe abstrada Request, que por sua vez implementa métodos de requisição e métodos de parse da resposta da requisição. Assim, os contrutores da classe Pokemon fica responsável por receber um nome, id ou url, construir um caminho [url] e usar os métodos da classe Request para receber os dados do determinado pokemon.
+
+**Threads**
+Nesta aplicação, o conceito de threads é utilizado Tela_Carregando. Quando é realizado uma busca por tipo de pokemon, a tela de carregamento é acionadada, que por sua vez é uma thread. Essa tela é processada paralelamente com o loop de requisição dos pokemons de determinado tipo. Assim, quando o loop é finalizado, a thread é finalizada e a lista de pokemons é mostrada.
+
+**Utilização da API PokeAPI**
+Ńesta aplicação, os métodos que utilizam a API estão implemetados na classe RequestClass. Nesta classe, o método get(url) realiza uma requisição https e retorna uma string com todos os dados presentes da url.
+
+
+
 #### Para executar o programa siga os passos abaixo
 
 ##### Instale a versão mais recente do Java

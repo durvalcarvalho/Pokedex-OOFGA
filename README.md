@@ -39,7 +39,7 @@ $ sudo apt-get install openjdk-8-jdk
 ```
 
 ###### Baixa o jar da aplicação
-> [Download do jar](https://gitlab.com/dudurval2/ep2/raw/master/LICENSE?inline=false)
+> [Download do jar](https://gitlab.com/durvalcsouza/ep2/raw/master/Pokedex.jar?inline=false)
 
 ###### Execute o Jar
 Abra o terminal no mesmo diretório onde foi baixado o jar e execute o comando:

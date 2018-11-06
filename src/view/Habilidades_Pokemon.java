@@ -34,7 +34,7 @@ public class Habilidades_Pokemon extends JFrame implements Runnable
 	 */
 	public Habilidades_Pokemon(Pokemon pokemon)
 	{
-		if(pokemon!= null)
+		if(pokemon != null)
 		{
 			this.pokemon = pokemon;
 			new Thread(this).start();			
@@ -114,7 +114,7 @@ public class Habilidades_Pokemon extends JFrame implements Runnable
 		
 		// label que irá receber a imagem do pokemon selecionado
 		img_pokemon = new JLabel("");
-		img_pokemon.setIcon(new ImageIcon(Habilidades_Pokemon.class.getResource("/view/Imagens/test.png")));
+		img_pokemon.setIcon(new ImageIcon(Habilidades_Pokemon.class.getResource("/view/Imagens/not_found.png")));
 		img_pokemon.setBounds(177, 77, 89, 75);
 		Habilidades_Panel.add(img_pokemon);
 		

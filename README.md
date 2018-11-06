@@ -1,7 +1,7 @@
 # Pokedex Pokémon
 ![Pokeapi Logo](src/view/Imagens/pokeapi.png)
 
-Este Projeto contém um programa feito em **JAVA** capaz de visualizar informações de pokemons obtidas da **The RESTful Pokémon API**.
+Este Projeto contém um programa feito em **JAVA** capaz de visualizar informações de pokemons obtidas da **The RESTful Pokémon API**. Deste modo, para o funcionamento deste programa é essencial conexão com a internet.
 
 As principais funcionalidades são:
   - Cadastro de de novos treinadores

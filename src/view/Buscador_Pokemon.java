@@ -40,6 +40,10 @@ public class Buscador_Pokemon extends JDialog
 	private Choice Pokemon_achados_choice;
 	private Vector<String> poke_names = new Vector<String>();
 	private Pokemon atual_pokemon = null;
+	private boolean Captura_Pokemon = false;
+	
+	// Método para verificar se o botão capturar pokemon foi apertado
+	public boolean getCaptura() { return Captura_Pokemon; }
 
 	public Buscador_Pokemon()
 	{
@@ -218,6 +222,7 @@ public class Buscador_Pokemon extends JDialog
 				// Se algum pokemon estiver selecionado, retorno para pokedex
 				if(!(atual_pokemon == null))
 				{
+					Captura_Pokemon = true;
 					dispose();
 				}
 			}

@@ -289,7 +289,7 @@ public class Pokedex extends JFrame
 				Buscador_Pokemon bp =  new Buscador_Pokemon();
 				
 				// Se na tela do buscador algum pokemon tiver sido "capturado"
-				if(bp.getPokemon() != null)
+				if(bp.getPokemon() != null && bp.getCaptura())
 				{					
 					// O pokeon capturado é adicionado na lista de pokemons do treinador
 					String poke_capturado = bp.getPokemon();

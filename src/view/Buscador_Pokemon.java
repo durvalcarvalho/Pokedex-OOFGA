@@ -109,7 +109,7 @@ public class Buscador_Pokemon extends JDialog
 		// label que irá receber a imagem do pokemon
 		Pokemon_Img = new JLabel();
 		Pokemon_Img.setIcon(new ImageIcon(Pokedex.class.getResource("/view/Imagens/0.png")));
-		Pokemon_Img.setBounds(400, 290, 100, 100);
+		Pokemon_Img.setBounds(420, 310, 120, 120);
 		Buscador_Panel.add(Pokemon_Img);
 		
 		// choice que irá receber os nomes dos pokemons filtrados
